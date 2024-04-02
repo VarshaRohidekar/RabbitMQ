@@ -7,7 +7,8 @@ mysql_connection = mysql.connector.connect(
     host='localhost',
     user='root',
     password='newyork1176',
-    database='inventory'
+    database='inventory',
+    autocommit='commit'
 )
 mysql_cursor = mysql_connection.cursor()
 
@@ -21,7 +22,7 @@ def callback(ch, method, properties, body):
 
     # Insert data into MySQL table
     mysql_cursor.execute('INSERT INTO items (name, price) VALUES (%s, %s)', (name, price))
-    mysql_connection.commit()
+    
 
     print(f"Inserted into MySQL: Name: {name}, Price: {price}")
 
