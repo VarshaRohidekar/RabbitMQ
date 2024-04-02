@@ -7,6 +7,10 @@ services:
       - "5123:5123"
     environment:
       RABBITMQ_HOST: rabbitmq
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: newyork1176
+      MYSQL_DATABASE: inventory
 
   consumer_one:
     build: ./Consumer_one
@@ -14,6 +18,10 @@ services:
       - "5001:5001"
     environment:
       RABBITMQ_HOST: rabbitmq
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: newyork1176
+      MYSQL_DATABASE: inventory
 
   consumer_two:
     build: ./Consumer_two
@@ -21,6 +29,10 @@ services:
       - "5002:5002"
     environment:
       RABBITMQ_HOST: rabbitmq
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: newyork1176
+      MYSQL_DATABASE: inventory
 
   consumer_three:
     build: ./Consumer_three
@@ -28,6 +40,10 @@ services:
       - "5003:5003"
     environment:
       RABBITMQ_HOST: rabbitmq
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: newyork1176
+      MYSQL_DATABASE: inventory
 
   consumer_four:
     build: ./Consumer_four
@@ -35,6 +51,10 @@ services:
       - "5004:5004"
     environment:
       RABBITMQ_HOST: rabbitmq
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: newyork1176
+      MYSQL_DATABASE: inventory
 
   rabbitmq:
     image: rabbitmq:3.8-management
