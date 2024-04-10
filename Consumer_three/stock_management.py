@@ -2,18 +2,16 @@ import pika
 import mysql.connector
 import json
 
-# Connect to MySQL database
 mysql_connection = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='newyork1176',
+    password='pswd',
     database='inventory',
-    autocommit = 'true'
+    autocommit = True
 )
 mysql_cursor = mysql_connection.cursor()
 
 def callback(ch, method, properties, body):
-    # Decode the JSON message received from producer
     message_data = json.loads(body.decode())
     print(message_data)
 
@@ -45,21 +43,14 @@ def callback(ch, method, properties, body):
     # if messages_received >= 20:
     ch.stop_consuming()
 
-# Connect to RabbitMQ
 rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = rabbitmq_connection.channel()
-
-# Ensure the queue exists
 channel.queue_declare(queue='shipping_queue')
 
-# Set up consumer parameters
 messages_received = 0
 channel.basic_consume(queue='shipping_queue', on_message_callback=callback)
-
 print('Waiting for messages. To exit press CTRL+C')
 channel.start_consuming()
-
-# Close connections
 mysql_cursor.close()
 mysql_connection.close()
 rabbitmq_connection.close()

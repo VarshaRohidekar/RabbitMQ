@@ -9,7 +9,7 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: newyork1176
+      MYSQL_PASSWORD: pswd
       MYSQL_DATABASE: inventory
 
   consumer_one:
@@ -20,7 +20,7 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: newyork1176
+      MYSQL_PASSWORD: pswd
       MYSQL_DATABASE: inventory
 
   consumer_two:
@@ -31,7 +31,7 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: newyork1176
+      MYSQL_PASSWORD: pswd
       MYSQL_DATABASE: inventory
 
   consumer_three:
@@ -42,7 +42,7 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: newyork1176
+      MYSQL_PASSWORD: pswd
       MYSQL_DATABASE: inventory
 
   consumer_four:
@@ -53,7 +53,7 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: newyork1176
+      MYSQL_PASSWORD: pswd
       MYSQL_DATABASE: inventory
 
   rabbitmq:

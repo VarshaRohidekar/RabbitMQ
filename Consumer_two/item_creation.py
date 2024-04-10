@@ -6,7 +6,7 @@ import json
 mysql_connection = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='newyork1176',
+    password='pswd',
     database='inventory',
     autocommit='commit'
 )
