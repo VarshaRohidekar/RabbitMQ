@@ -1,4 +1,4 @@
-CREATE DATABASE inventory;
+CREATE DATABASE IF NOT EXISTS inventory;
 
 use inventory;
 

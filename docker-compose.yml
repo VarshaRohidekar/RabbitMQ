@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: newyork1176
+      MYSQL_DATABASE: inventory
+    volumes:
+      - ./DDL.sql:/docker-entrypoint-initdb.d/DDL.sql
+
   producer:
     build: ./Producer
     ports:
@@ -9,8 +17,11 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: pswd
+      MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
+    depends_on:
+      - mysql
+    command: bash -c "sleep 10 && python producer.py"
 
   consumer_one:
     build: ./Consumer_one
@@ -20,8 +31,12 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: pswd
+      MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
+    depends_on:
+      - mysql
+    command: bash -c "sleep 10 && python healthcheck.py"
+
 
   consumer_two:
     build: ./Consumer_two
@@ -31,8 +46,11 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: pswd
+      MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
+    depends_on:
+      - mysql
+    command: bash -c "sleep 10 && python item_creation.py"
 
   consumer_three:
     build: ./Consumer_three
@@ -42,8 +60,11 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: pswd
+      MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
+    depends_on:
+      - mysql
+    command: bash -c "sleep 10 && python stock_management.py"
 
   consumer_four:
     build: ./Consumer_four
@@ -53,14 +74,18 @@ services:
       RABBITMQ_HOST: rabbitmq
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_PASSWORD: pswd
+      MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
+    depends_on:
+      - mysql
+    command: bash -c "sleep 10 && python order_processing.py"
 
   rabbitmq:
     image: rabbitmq:3.8-management
     ports:
       - "5672:5672"
       - "15672:15672"
+
 
 volumes:
   rabbitmq_data:

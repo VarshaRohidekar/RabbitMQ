@@ -4,11 +4,12 @@ import json
 
 # Connect to MySQL database
 mysql_connection = mysql.connector.connect(
-    host='localhost',
+    host='mysql',
     user='root',
-    password='pswd',
+    password='newyork1176',
     database='inventory',
-    autocommit='commit'
+    autocommit=True,
+    port=3306
 )
 mysql_cursor = mysql_connection.cursor()
 
@@ -36,7 +37,7 @@ def callback(ch, method, properties, body):
         ch.stop_consuming()
 
 # Connect to RabbitMQ
-rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
 channel = rabbitmq_connection.channel()
 
 # Ensure the queue exists

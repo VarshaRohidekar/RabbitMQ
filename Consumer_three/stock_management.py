@@ -3,10 +3,11 @@ import mysql.connector
 import json
 
 mysql_connection = mysql.connector.connect(
-    host='localhost',
+    host='mysql',
     user='root',
-    password='pswd',
+    password='newyork1176',
     database='inventory',
+    port=3306,
     autocommit = True
 )
 mysql_cursor = mysql_connection.cursor()
@@ -43,7 +44,7 @@ def callback(ch, method, properties, body):
     # if messages_received >= 20:
     ch.stop_consuming()
 
-rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
 channel = rabbitmq_connection.channel()
 channel.queue_declare(queue='shipping_queue')
 
