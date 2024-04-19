@@ -23,6 +23,7 @@ services:
       - mysql
     command: bash -c "sleep 10 && python producer.py"
 
+
   consumer_one:
     build: ./Consumer_one
     ports:

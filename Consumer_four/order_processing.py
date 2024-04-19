@@ -51,12 +51,6 @@ def callback(ch, method, properties, body):
     time.sleep(10)
 
 
-    
-
-
-
-    
-
 rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
 channel = rabbitmq_connection.channel()
 channel.queue_declare(queue='op_queue')
