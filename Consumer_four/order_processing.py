@@ -30,12 +30,11 @@ def callback(ch, method, properties, body):
         name = order['name']
         quantity = order['quantity']
         # print(name, quantity)
-    
-
 
         mysql_cursor.execute("""SELECT item_id, price FROM items WHERE items.name = %(name)s""", {'name': name})
         present_quantity = mysql_cursor.fetchall()
         # if item not present, need to send to error queue and explain that the item needs to be added to table
+        print(present_quantity)
         i = present_quantity[0][0]
         price = int(present_quantity[0][1])
         print(i)
@@ -45,10 +44,11 @@ def callback(ch, method, properties, body):
         
         mysql_cursor.execute("""UPDATE orders SET total_amount = total_amount + %(price)s WHERE order_id = %(order_id)s""", {'price': price * quantity, 'order_id': order_id})
 
+    time.sleep(10)
+
     ch.basic_ack(delivery_tag=method.delivery_tag)
     ch.stop_consuming()
 
-    time.sleep(10)
 
 
 rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))

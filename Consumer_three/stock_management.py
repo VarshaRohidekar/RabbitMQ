@@ -1,6 +1,7 @@
 import pika
 import mysql.connector
 import json
+import time
 
 mysql_connection = mysql.connector.connect(
     host='mysql',
@@ -14,34 +15,17 @@ mysql_cursor = mysql_connection.cursor()
 
 def callback(ch, method, properties, body):
     message_data = json.loads(body.decode())
-    print(message_data)
 
-    # Extract name and price from the message
     name = message_data['name']
     quantity = int(message_data['quantity'])
 
     mysql_cursor.execute("""SELECT item_id, quantity FROM stock NATURAL JOIN items WHERE items.name = %(name)s""", {'name': name})
     present_quantity = mysql_cursor.fetchall()
-    i = present_quantity[0][0]
     q = int(present_quantity[0][1])
-    print(q - quantity)
-    n = q - quantity
-    print(i)
 
-    mysql_cursor.execute("""UPDATE stock SET quantity = %(new_quantity)s WHERE item_id=%(id)s""", {'id': i, 'new_quantity': n})
-        
-    # mysql_cursor.execute('INSERT INTO items (name, price) VALUES (%s, %s)', (name, quantity))
     mysql_connection.commit()
-
-    # print(f"Inserted into MySQL: Name: {name}, Price: {price}")
-
-    # # Acknowledge that the message has been processed
+    time.sleep(15)
     ch.basic_ack(delivery_tag=method.delivery_tag)
-
-    # # Stop consuming after processing a certain number of messages
-    # global messages_received
-    # messages_received += 1
-    # if messages_received >= 20:
     ch.stop_consuming()
 
 rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
