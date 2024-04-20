@@ -20,23 +20,26 @@ services:
       MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
     depends_on:
+      - consumer_one
       - mysql
-    command: bash -c "sleep 10 && python producer.py"
+    command: bash -c "sleep 60 && python producer.py"
 
 
-  # consumer_one:
-  #   build: ./Consumer_one
-  #   ports:
-  #     - "5124:5124"
-  #   environment:
-  #     RABBITMQ_HOST: rabbitmq
-  #     MYSQL_HOST: mysql
-  #     MYSQL_USER: root
-  #     MYSQL_PASSWORD: ujjwalmk
-  #     MYSQL_DATABASE: inventory
-  #   depends_on:
-  #     - mysql
-  #   command: bash -c "sleep 10 && python healthcheck.py"
+  consumer_one:
+    build: ./Consumer_one
+    ports:
+      - "5124:5124"
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ujjwalmk
+      MYSQL_DATABASE: inventory
+    depends_on:
+      - rabbitmq
+      - mysql
+    entrypoint: ./entrypoint.sh
+    command: python -u healthcheck.py
 
 
   consumer_two:
@@ -50,8 +53,9 @@ services:
       MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
     depends_on:
+      - consumer_one
       - mysql
-    command: bash -c "sleep 10 && python item_creation.py"
+    command: bash -c "sleep 60 && python item_creation.py"
 
   consumer_three:
     build: ./Consumer_three
@@ -64,8 +68,9 @@ services:
       MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
     depends_on:
+      - consumer_one
       - mysql
-    command: bash -c "sleep 10 && python stock_management.py"
+    command: bash -c "sleep 60 && python stock_management.py"
 
   consumer_four:
     build: ./Consumer_four
@@ -78,14 +83,16 @@ services:
       MYSQL_PASSWORD: newyork1176
       MYSQL_DATABASE: inventory
     depends_on:
+      - consumer_one
       - mysql
-    command: bash -c "sleep 10 && python order_processing.py"
+    command: bash -c "sleep 60 && python order_processing.py"
 
   rabbitmq:
     image: rabbitmq:3.8-management
     ports:
       - "5672:5672"
       - "15672:15672"
+    command: bash -c "sleep 30"
 
 
 volumes:

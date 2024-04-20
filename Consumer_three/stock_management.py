@@ -2,6 +2,9 @@ import pika
 import mysql.connector
 import json
 import time
+import sys
+
+
 
 mysql_connection = mysql.connector.connect(
     host='mysql',
@@ -21,8 +24,16 @@ def callback(ch, method, properties, body):
 
     mysql_cursor.execute("""SELECT item_id, quantity FROM stock NATURAL JOIN items WHERE items.name = %(name)s""", {'name': name})
     present_quantity = mysql_cursor.fetchall()
+    i = present_quantity[0][0]
     q = int(present_quantity[0][1])
+    n = q - quantity
 
+    mysql_cursor.execute("""UPDATE stock SET quantity = %(new_quantity)s WHERE item_id=%(id)s""", {'id': i, 'new_quantity': n})
+    mysql_cursor.execute("""SELECT stock_id from stock WHERE item_id=%(id)s AND quantity=%(new_quantity)s""", {'id': i, 'new_quantity': n})
+    stock_id = mysql_cursor.fetchall()
+    stock_id = stock_id[0][0]
+    mysql_cursor.execute("""INSERT INTO stock_shipment (stock_id, item_id, quantity) 
+                        VALUES (%(stock_id)s,%(id)s,%(new_quantity)s ) """, {'stock_id':stock_id,'id': i, 'new_quantity': n})
     mysql_connection.commit()
     time.sleep(15)
     ch.basic_ack(delivery_tag=method.delivery_tag)
