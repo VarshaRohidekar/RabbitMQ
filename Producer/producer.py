@@ -1,9 +1,15 @@
 import pika
 import json
+import sys
 
 # Connect to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
-channel = connection.channel()
+try:
+    rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
+except:
+    print("Producer couldn't connect to RabbitMQ")
+    sys.exit(1)
+
+channel = rabbitmq_connection.channel()
 
 channel.queue_declare(queue='item_queue')
 channel.queue_declare(queue='shipping_queue')
@@ -43,4 +49,4 @@ channel.basic_publish(exchange='', routing_key='op_queue', body=message_body_con
 print("Sent item data to RabbitMQ")
 
 # Close the connection
-connection.close()
+rabbitmq_connection.close()

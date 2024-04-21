@@ -1,4 +1,4 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   mysql:
@@ -8,6 +8,15 @@ services:
       MYSQL_DATABASE: inventory
     volumes:
       - ./DDL.sql:/docker-entrypoint-initdb.d/DDL.sql
+
+  # rabbitmq:
+  #   image: rabbitmq:3.8-management
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+    # command: ["bash", "-c", "/bin/bash /app/delay_startup.sh && sleep 1 && rabbitmq-server"]
+    # volumes:
+    #   - "./delay_startup.sh:/app/delay_startup.sh"
 
   producer:
     build: ./Producer
@@ -22,7 +31,7 @@ services:
     depends_on:
       - consumer_one
       - mysql
-    command: bash -c "sleep 60 && python producer.py"
+    command: bash -c "sleep 20 && python producer.py"
 
 
   consumer_one:
@@ -36,10 +45,9 @@ services:
       MYSQL_PASSWORD: ujjwalmk
       MYSQL_DATABASE: inventory
     depends_on:
-      - rabbitmq
       - mysql
-    entrypoint: ./entrypoint.sh
-    command: python -u healthcheck.py
+    # entrypoint: ./entrypoint.sh
+    command: bash -c "sleep 10 && python healthcheck.py"
 
 
   consumer_two:
@@ -55,7 +63,7 @@ services:
     depends_on:
       - consumer_one
       - mysql
-    command: bash -c "sleep 60 && python item_creation.py"
+    command: bash -c "sleep 30 && python item_creation.py"
 
   consumer_three:
     build: ./Consumer_three
@@ -70,7 +78,7 @@ services:
     depends_on:
       - consumer_one
       - mysql
-    command: bash -c "sleep 60 && python stock_management.py"
+    command: bash -c "sleep 30 && python stock_management.py"
 
   consumer_four:
     build: ./Consumer_four
@@ -85,125 +93,4 @@ services:
     depends_on:
       - consumer_one
       - mysql
-    command: bash -c "sleep 60 && python order_processing.py"
-
-  rabbitmq:
-    image: rabbitmq:3.8-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    command: bash -c "sleep 30"
-
-
-volumes:
-  rabbitmq_data:
-
-
-# # Extra
-# version: '3.8'
-
-# services:
-#   mysql:
-#     image: mysql:8.0
-#     environment:
-#       MYSQL_ROOT_PASSWORD: ujjwalmk
-#       MYSQL_DATABASE: inventory
-#     volumes:
-#       - ./DDL.sql:/docker-entrypoint-initdb.d/DDL.sql
-
-#   producer:
-#     build: ./Producer
-#     ports:
-#       - "5123:5123"
-#     environment:
-#       RABBITMQ_HOST: rabbitmq
-#       MYSQL_HOST: mysql
-#       MYSQL_USER: root
-#       MYSQL_PASSWORD: ujjwalmk
-#       MYSQL_DATABASE: inventory
-#     depends_on:
-#       - mysql
-#       - rabbitmq
-#     command: bash -c "sleep 10 && python producer.py"
-
-#   consumer_one:
-#     build: ./Consumer_one
-#     ports:
-#       - "5124:5124"
-#     environment:
-#       RABBITMQ_HOST: rabbitmq
-#       MYSQL_HOST: mysql
-#       MYSQL_USER: root
-#       MYSQL_PASSWORD: ujjwalmk
-#       MYSQL_DATABASE: inventory
-#     depends_on:
-#       - mysql
-#       - rabbitmq
-#       - producer
-#     healthcheck:
-#       test: ["CMD-SHELL", "python healthcheck.py"]
-#       interval: 10s
-#       retries: 5
-#     command: bash -c "sleep 10 && python healthcheck.py"
-
-#   consumer_two:
-#     build: ./Consumer_two
-#     ports:
-#       - "5125:5125"
-#     environment:
-#       RABBITMQ_HOST: rabbitmq
-#       MYSQL_HOST: mysql
-#       MYSQL_USER: root
-#       MYSQL_PASSWORD: ujjwalmk
-#       MYSQL_DATABASE: inventory
-#     depends_on:
-#       - mysql
-#       - rabbitmq
-#       - producer
-#       - consumer_one
-#     command: bash -c "sleep 10 && python item_creation.py"
-
-#   consumer_three:
-#     build: ./Consumer_three
-#     ports:
-#       - "5126:5126"
-#     environment:
-#       RABBITMQ_HOST: rabbitmq
-#       MYSQL_HOST: mysql
-#       MYSQL_USER: root
-#       MYSQL_PASSWORD: ujjwalmk
-#       MYSQL_DATABASE: inventory
-#     depends_on:
-#       - mysql
-#       - rabbitmq
-#       - producer
-#       - consumer_one
-#     command: bash -c "sleep 10 && python stock_management.py"
-
-#   consumer_four:
-#     build: ./Consumer_four
-#     ports:
-#       - "5127:5127"
-#     environment:
-#       RABBITMQ_HOST: rabbitmq
-#       MYSQL_HOST: mysql
-#       MYSQL_USER: root
-#       MYSQL_PASSWORD: ujjwalmk
-#       MYSQL_DATABASE: inventory
-#     depends_on:
-#       - mysql
-#       - rabbitmq
-#       - producer
-#       - consumer_one
-#     command: bash -c "sleep 10 && python order_processing.py"
-
-#   rabbitmq:
-#     image: rabbitmq:3.8-management
-#     ports:
-#       - "5672:5672"
-#       - "15672:15672"
-#     healthcheck:
-#       test: ["CMD", "rabbitmqctl", "status"]
-#       interval: 10s
-#       retries: 5
-#       timeout: 5s
+    command: bash -c "sleep 30 && python order_processing.py"

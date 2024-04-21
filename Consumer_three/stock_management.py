@@ -39,7 +39,12 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
     ch.stop_consuming()
 
-rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
+try:
+    rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
+except:
+    print("Consumer 3 couldn't connect to RabbitMQ")
+    sys.exit(1)
+
 channel = rabbitmq_connection.channel()
 channel.queue_declare(queue='shipping_queue')
 

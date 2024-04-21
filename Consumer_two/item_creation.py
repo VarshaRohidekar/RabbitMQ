@@ -2,6 +2,7 @@ import pika
 import mysql.connector
 import json
 import time
+import sys
 
 # Connect to MySQL database
 mysql_connection = mysql.connector.connect(
@@ -34,8 +35,11 @@ def callback(ch, method, properties, body):
     ch.stop_consuming()
 
 
-# Connect to RabbitMQ
-rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
+try:
+    rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
+except:
+    print("Consumer 2 couldn't connect to RabbitMQ")
+    sys.exit(1)
 channel = rabbitmq_connection.channel()
 
 # Ensure the queue exists
