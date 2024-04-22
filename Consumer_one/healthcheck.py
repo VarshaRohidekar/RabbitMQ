@@ -24,7 +24,7 @@ def main():
 
     print("RabbitMQ could not be reached after {} retries. Exiting.".format(retries))
 
-    # os.system("docker compose down")
+    os.system("docker compose down")
     sys.exit(1)
 
 if __name__ == "__main__":

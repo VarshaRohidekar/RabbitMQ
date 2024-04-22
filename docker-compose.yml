@@ -9,14 +9,25 @@ services:
     volumes:
       - ./DDL.sql:/docker-entrypoint-initdb.d/DDL.sql
 
-  # rabbitmq:
-  #   image: rabbitmq:3.8-management
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     # command: ["bash", "-c", "/bin/bash /app/delay_startup.sh && sleep 1 && rabbitmq-server"]
     # volumes:
     #   - "./delay_startup.sh:/app/delay_startup.sh"
+
+  flask:
+    build: ./flask
+    ports:
+      - "5001:5001"
+    depends_on:
+      - consumer_one
+      - consumer_two
+      - consumer_three
+      - consumer_four
+    command: python -u app.py
 
   producer:
     build: ./Producer

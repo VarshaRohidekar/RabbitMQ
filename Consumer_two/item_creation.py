@@ -38,7 +38,7 @@ def callback(ch, method, properties, body):
 try:
     rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
 except:
-    print("Consumer 2 couldn't connect to RabbitMQ")
+    print("Consumer 2 couldn't connect to RabbitMQ, trying again in 5 seconds")
     sys.exit(1)
 channel = rabbitmq_connection.channel()
 
